@@ -3,12 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Guest } from './auth/guest.entity';
 import { User } from './auth/user.entity';
 import { UsersRepository } from './auth/users.repository';
-import { UserController } from './user/user.controller';
 import sqliteConfig from './sql-lite-conn';
 import { AuthController } from './auth/auth.controller';
-import { LibroService } from './libro/libro.service';
 import { AuthService } from './auth/auth.service';
 import { Repository } from 'typeorm';
+import { GuestsRepository } from './auth/guests.repository';
+
 
 
 @Module({
@@ -26,12 +26,12 @@ import { Repository } from 'typeorm';
       synchronize: true,
     } 
     ),
-    TypeOrmModule.forFeature([UsersRepository])
+    TypeOrmModule.forFeature([UsersRepository,GuestsRepository])
     
   ],
   
-  controllers: [AuthController,UserController],
-  providers: [AuthService,LibroService,Repository],
+  controllers: [AuthController],
+  providers: [AuthService,Repository]
  
 })
 export class AppModule {}

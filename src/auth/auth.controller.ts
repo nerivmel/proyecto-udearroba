@@ -8,8 +8,11 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
+import { threadId } from 'worker_threads';
 import { AuthService } from './auth.service';
-import { RegisterUserDto } from './dto/register-uder.dto';
+import { RegisterGuestDto } from './dto/register-guest.dto';
+import { GuestsRepository } from './guests.repository';
+
 
 @Controller('auth')
 export class AuthController {
@@ -22,18 +25,18 @@ export class AuthController {
   y si los encuentra los popula en el dto para pasar de controlador al servicio 
   del servicio al repositorio y el repositorio lo va a guardar en la base de datos*/
   @Post('/register')
-  register(@Body() registerUserDto: RegisterUserDto): Promise<void>{
-    return this.authService.registerUser(registerUserDto);
+  register(@Body() registerGuestDto: RegisterGuestDto): Promise<void>{
+    return this.authService.registerGuest(registerGuestDto);
   }
 
 
 
-  /*@Get()
+  @Get('/')
   getUsers() {
     return 'altoquenomas';
   }
 
-  @Get(':id')
+  /*@Get(':id')
   getUser(@Res() res, @Param('id') params) {
     const user = this.authService.findUserById(params);
     if (user != null) {

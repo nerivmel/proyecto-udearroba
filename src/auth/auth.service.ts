@@ -1,20 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RegisterUserDto } from './dto/register-uder.dto';
-import { User } from './user.entity';
-import { UsersRepository } from './users.repository';
+import { RegisterGuestDto } from './dto/register-guest.dto';
+import { Guest } from './guest.entity';
+import { GuestsRepository } from './guests.repository';
 
 @Injectable()
 export class AuthService {
   
   constructor(
-    @InjectRepository(UsersRepository)
-    private usersRepository: UsersRepository,
+    
+    @InjectRepository(GuestsRepository)
+    private guestsRepository: GuestsRepository,
   ){}
 
-  async registerUser(registerUserDto: RegisterUserDto): Promise<void>{
-    return this.usersRepository.createUser(registerUserDto);
+  async registerGuest(registerGuestDto: RegisterGuestDto): Promise<void>{
+    return await this.guestsRepository.createGuest(registerGuestDto);
   }
     
   
