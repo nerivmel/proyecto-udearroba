@@ -12,7 +12,7 @@ export class Guest {
     lastname:string;
 
     @Column({length:100})
-    userName:string
+    username:string
 
     @Column({length:100, unique: true})
     email:string

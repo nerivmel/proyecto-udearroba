@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Guest } from './auth/guest.entity';
-import { User } from './auth/user.entity';
-import { UsersRepository } from './auth/users.repository';
 import sqliteConfig from './sql-lite-conn';
 import { AuthController } from './auth/auth.controller';
 import { AuthService } from './auth/auth.service';
 import { Repository } from 'typeorm';
-import { GuestsRepository } from './auth/guests.repository';
+import { UsersModule } from './users/users.module';
+import { GuestsModule } from './guests/guests.module';
+
 
 
 
@@ -22,11 +21,14 @@ import { GuestsRepository } from './auth/guests.repository';
       username: 'udea',
       password: 'udea',
       database: 'dbudea',
-      entities:[User, Guest],
+      entities:[],
       synchronize: true,
     } 
     ),
-    TypeOrmModule.forFeature([UsersRepository,GuestsRepository])
+    TypeOrmModule.forFeature([]),
+    UsersModule,
+    GuestsModule,
+    
     
   ],
   
