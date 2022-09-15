@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { GuestsService } from './guests.service';
 import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
+import { Guest } from './entities/guest.entity';
 
 @Controller('guests')
 export class GuestsController {
@@ -19,7 +20,7 @@ export class GuestsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.guestsService.findOne(+id);
+    return this.guestsService.findById(id);
   }
   
 

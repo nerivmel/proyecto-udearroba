@@ -6,6 +6,7 @@ import { AuthService } from './auth/auth.service';
 import { Repository } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { GuestsModule } from './guests/guests.module';
+import { Guest } from './guests/entities/guest.entity';
 
 
 
@@ -21,19 +22,18 @@ import { GuestsModule } from './guests/guests.module';
       username: 'udea',
       password: 'udea',
       database: 'dbudea',
-      entities:[],
+      entities:[Guest],
       synchronize: true,
     } 
     ),
-    TypeOrmModule.forFeature([]),
     UsersModule,
     GuestsModule,
     
     
   ],
   
-  controllers: [AuthController],
-  providers: [AuthService,Repository]
+  controllers: [],
+  providers: [Repository]
  
 })
 export class AppModule {}

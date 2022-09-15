@@ -1,8 +1,11 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm"
+import { table } from "console";
+import {Column, Entity, PrimaryGeneratedColumn, Table} from "typeorm"
 
 @Entity()
+
 export class Guest {
-    @PrimaryGeneratedColumn('uuid')
+    
+    @PrimaryGeneratedColumn("uuid")
     id:string;
     
     @Column({length:100})

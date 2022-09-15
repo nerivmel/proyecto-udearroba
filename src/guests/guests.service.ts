@@ -6,6 +6,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, createQueryBuilder, Connection } from 'typeorm';
 
 
+
+
 const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
@@ -17,20 +19,28 @@ export class GuestsService {
 //______INICIO_______creando nuevo invitado_____________________________________________
  
 async create(newGuest: CreateGuestDto) {
-    var guestsR = this.guestsRepository;
+    let guestsR = this.guestsRepository;
     const passwordHash = await bcrypt.hash(newGuest.password, 10);
     newGuest.password = passwordHash;
+    console.log (newGuest);
     return guestsR.save(newGuest);
+    
   }
 //_______FIN_________creando nuevo invitado_______________________________________________________________
   
 findAll() {
     return `This action returns all guests`;
   }
+//______INICIO_______Traer invitado por ID____________
+ 
+  async findById(guestId: string) {
+    const guest = await createQueryBuilder('guests')
+      .where('guests.id = :id', { id: guestId })
+      .getOne();
 
-  findOne(id: number) {
-    return `This action returns a #${id} guest`;
+    return guest;
   }
+//______FIN_________Traer invitado por ID ______________
 
   update(id: number, updateGuestDto: UpdateGuestDto) {
     return `This action updates a #${id} guest`;
