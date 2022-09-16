@@ -3,6 +3,7 @@ import { GuestsService } from './guests.service';
 import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
 import { Guest } from './entities/guest.entity';
+import { FindOneOptions, FindOptionsWhere } from 'typeorm';
 
 @Controller('guests')
 export class GuestsController {
@@ -19,13 +20,13 @@ export class GuestsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.guestsService.findById(id);
+  findById(@Param('id') id: string) {
+    return this.guestsService.getOne(id);
   }
   
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGuestDto: UpdateGuestDto) {
+  update(@Param('id') id: string, @Body() updateGuestDto: UpdateGuestDto): string {
     return this.guestsService.update(+id, updateGuestDto);
   }
 
