@@ -4,6 +4,9 @@ import { UpdateGuestDto } from './dto/update-guest.dto';
 import { Guest } from './entities/guest.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, createQueryBuilder, Connection, FindOptionsWhere, FindOneOptions } from 'typeorm';
+import { LoginGuestDto } from './dto/login-guest.dto';
+import { compare } from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 
 //__________Encriptacion de contraseña
@@ -14,7 +17,41 @@ const saltRounds = 10;
 export class GuestsService {
   constructor(
     @InjectRepository(Guest) private guestsRepository: Repository<Guest>,
+    private jwtService:JwtService
   ) {}
+
+async login(guestObjectLogin:LoginGuestDto){
+    const {username, password} = guestObjectLogin;
+    
+    const findGuest = await this.guestsRepository.findOne({
+      where:{username}
+    });
+    
+    if(!findGuest) throw new BadGatewayException ('NO_SE_ENCONTRO_EL_USUARIO');
+
+    const checkPassword = await compare(password, findGuest.password);
+
+    if(!checkPassword) throw new BadGatewayException ('CONTRASEÑA_INCORRECTA');
+
+    //Generando Token
+
+    const payload = {name: findGuest.name, username: findGuest.username};
+    const token = this.jwtService.sign(payload);
+    const data = {
+      
+      guestEmail:findGuest.email,
+      guestName:findGuest.name,
+      guestUsername: findGuest.username,
+      guestLastName: findGuest.lastname,
+      guestOrganization: findGuest.organization,
+      token,
+    }
+
+    
+    return data;
+  }
+
+
 //______INICIO_______creando nuevo invitado_____________________________________________
  
 async create(newGuest: CreateGuestDto) {

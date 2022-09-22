@@ -4,11 +4,19 @@ import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
 import { Guest } from './entities/guest.entity';
 import { FindOneOptions, FindOptionsWhere } from 'typeorm';
+import { LoginGuestDto } from './dto/login-guest.dto';
 
 @Controller('guests')
 export class GuestsController {
   constructor(private readonly guestsService: GuestsService) {}
 
+  //login
+  @Post('login')
+  loginGuest(@Body() guestObjectLogin:LoginGuestDto){
+    return this.guestsService.login(guestObjectLogin);
+  }
+
+  //register
   @Post()
   create(@Body() createGuestDto: CreateGuestDto) {
     return this.guestsService.create(createGuestDto);
@@ -22,6 +30,7 @@ export class GuestsController {
   @Get(':id')
   findById(@Param('id') id: string) {
     return this.guestsService.getOne(id);
+
   }
   
 
