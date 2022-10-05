@@ -3,7 +3,7 @@ import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
 import { Guest } from './entities/guest.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, createQueryBuilder, Connection, FindOptionsWhere, FindOneOptions } from 'typeorm';
+import { Repository, createQueryBuilder, Connection, FindOptionsWhere, FindOneOptions, FindOneAndReplaceOption } from 'typeorm';
 import { LoginGuestDto } from './dto/login-guest.dto';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -38,7 +38,6 @@ async login(guestObjectLogin:LoginGuestDto){
     const payload = {name: findGuest.name, username: findGuest.username};
     const token = this.jwtService.sign(payload);
     const data = {
-      
       guestEmail:findGuest.email,
       guestName:findGuest.name,
       guestUsername: findGuest.username,
@@ -46,13 +45,11 @@ async login(guestObjectLogin:LoginGuestDto){
       guestOrganization: findGuest.organization,
       token,
     }
-
-    
     return data;
   }
 
 
-//______INICIO_______creando nuevo invitado_____________________________________________
+//______INICIO_______creando nuevo invitado__________________________________________________________________
  
 async create(newGuest: CreateGuestDto) {
     const {email,name,username,password,organization,lastname} = newGuest;
@@ -69,7 +66,7 @@ async create(newGuest: CreateGuestDto) {
     return guestsR.save(newGuest);
     
   }
-//_______FIN_________creando nuevo invitado_______________________________________________________________
+//_______FIN_________creando nuevo invitado___________________________________________________________________
   
 //________INICIO______Traer todos los invitados_______________________________________________________________
 async findAll() {
@@ -88,7 +85,7 @@ async findAll() {
 //________FIN__________Traer todos los invitados______________________________________________________________
 
 
-//______INICIO_______Traer inZitado por ID_______________
+//______INICIO_______Traer invitado por ID____________________________________________________________________
  
   async getOne(id:string) {
     const guest = await this.guestsRepository.findOne({
@@ -103,14 +100,26 @@ async findAll() {
     if (!guest) throw new NotFoundException('El usuario no existe')
     return guest;
   }
-//______FIN_________Traer invitado por ID _______________
+//______FIN_________Traer invitado por ID ____________________________________________________________________
 
-  update(id: number, updateGuestDto: UpdateGuestDto) {
-    return `This action updates a #${id} guest`;
+
+
+//______INICIO_______Actualizar invitado_______________________________________________________________________
+  async update(id: string, updateGuestDto: UpdateGuestDto) {
+    const guest =await this.guestsRepository.update(id,updateGuestDto)
+      if (!guest) throw new NotFoundException('El usuario no existe')
+    
+    return this.guestsRepository.update(id,updateGuestDto);
   }
+//_____FIN___________Actualizar invitado_______________________________________________________________________
 
-  remove(id: number) {
-    return `This action removes a #${id} guest`;
+
+
+//_____INICIO_________ Eliminar Invitado_______________________________________________________________________
+  async remove(id: string) {
+    
+    return await this.guestsRepository.delete(id)
+    
   }
 }
-
+//____FIN_____________Eliminar invitado________________________________________________________________________

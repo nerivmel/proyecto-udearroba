@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UsersModule } from './users/users.module';
 import { GuestsModule } from './guests/guests.module';
 import { Guest } from './guests/entities/guest.entity';
+import { User } from './users/entities/user.entity';
 
 
 @Module({
@@ -17,7 +18,7 @@ import { Guest } from './guests/entities/guest.entity';
       username: 'udea',
       password: 'udea',
       database: 'dbudea',
-      entities:[Guest],
+      entities:[Guest,User],
       synchronize: true, 
       }
       

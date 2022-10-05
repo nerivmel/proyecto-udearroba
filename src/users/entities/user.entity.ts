@@ -1,3 +1,4 @@
+import { Guest } from 'src/guests/entities/guest.entity';
 import {CreateDateColumn, Column, Entity, OneToOne, PrimaryGeneratedColumn, JoinColumn} from 'typeorm'
 
 
@@ -31,7 +32,7 @@ export class User {
     @Column({length:255})
     userName:string;
 
-    @OneToOne(() => User)
+    @OneToOne(() => Guest)
     @JoinColumn()
-    invitado_id:string;
+    invitado:Guest;
 }
