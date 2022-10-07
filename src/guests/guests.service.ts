@@ -3,11 +3,10 @@ import { CreateGuestDto } from './dto/create-guest.dto';
 import { UpdateGuestDto } from './dto/update-guest.dto';
 import { Guest } from './entities/guest.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, createQueryBuilder, Connection, FindOptionsWhere, FindOneOptions, FindOneAndReplaceOption } from 'typeorm';
+import { Repository } from 'typeorm';
 import { LoginGuestDto } from './dto/login-guest.dto';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-
 
 //__________Encriptacion de contraseña
 const bcrypt = require('bcryptjs');
@@ -20,21 +19,16 @@ export class GuestsService {
     private jwtService:JwtService
   ) {}
 
+//login
 async login(guestObjectLogin:LoginGuestDto){
     const {username, password} = guestObjectLogin;
-    
     const findGuest = await this.guestsRepository.findOne({
       where:{username}
-    });
-    
+    }); 
     if(!findGuest) throw new BadGatewayException ('NO_SE_ENCONTRO_EL_USUARIO');
-
     const checkPassword = await compare(password, findGuest.password);
-
     if(!checkPassword) throw new BadGatewayException ('CONTRASEÑA_INCORRECTA');
-
-    //Generando Token
-
+//Generando Token
     const payload = {name: findGuest.name, username: findGuest.username};
     const token = this.jwtService.sign(payload);
     const data = {
@@ -47,30 +41,23 @@ async login(guestObjectLogin:LoginGuestDto){
     }
     return data;
   }
-
-
 //______INICIO_______creando nuevo invitado__________________________________________________________________
- 
 async create(newGuest: CreateGuestDto) {
     const {email,name,username,password,organization,lastname} = newGuest;
-    const guestExist = await this.guestsRepository.findOne({
-      where:{email}
-    })
-    if (guestExist){
-      throw new BadGatewayException(`ya existe un usuario registrado con el email #${email}`);
-    } 
+    const guestExist = await this.guestsRepository.findOne({where:{email}})
+      if (guestExist){
+        throw new BadGatewayException(`ya existe un usuario registrado con el email #${email}`);
+      } 
     let guestsR = this.guestsRepository;
     const passwordHash = await bcrypt.hash(newGuest.password, 10);
     newGuest.password = passwordHash;
     console.log (newGuest);
-    return guestsR.save(newGuest);
-    
+    return guestsR.save(newGuest); 
   }
 //_______FIN_________creando nuevo invitado___________________________________________________________________
   
 //________INICIO______Traer todos los invitados_______________________________________________________________
 async findAll() {
-
     return await this.guestsRepository.find({
       select:{
         name:true,
@@ -79,14 +66,10 @@ async findAll() {
         email:true,
         password:false
       }});
-    
   }
-
 //________FIN__________Traer todos los invitados______________________________________________________________
 
-
 //______INICIO_______Traer invitado por ID____________________________________________________________________
- 
   async getOne(id:string) {
     const guest = await this.guestsRepository.findOne({
       select:{
@@ -102,24 +85,17 @@ async findAll() {
   }
 //______FIN_________Traer invitado por ID ____________________________________________________________________
 
-
-
 //______INICIO_______Actualizar invitado_______________________________________________________________________
   async update(id: string, updateGuestDto: UpdateGuestDto) {
-    const guest =await this.guestsRepository.update(id,updateGuestDto)
+  const guest =await this.guestsRepository.update(id,updateGuestDto)
       if (!guest) throw new NotFoundException('El usuario no existe')
-    
-    return this.guestsRepository.update(id,updateGuestDto);
+      return this.guestsRepository.update(id,updateGuestDto);
   }
 //_____FIN___________Actualizar invitado_______________________________________________________________________
 
-
-
 //_____INICIO_________ Eliminar Invitado_______________________________________________________________________
   async remove(id: string) {
-    
-    return await this.guestsRepository.delete(id)
-    
-  }
+    return await this.guestsRepository.delete(id);
+  } 
 }
 //____FIN_____________Eliminar invitado________________________________________________________________________

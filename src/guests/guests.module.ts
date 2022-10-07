@@ -7,7 +7,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { jwtConstants } from './jwt.constants';
 import { JwtModule } from '@nestjs/jwt';
 
-
 @Module({
   imports: [
   JwtModule.register({
